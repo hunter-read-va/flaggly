@@ -24,14 +24,14 @@ const FlagList: React.FC<FlagListProps> = ({ projectId }) => {
 
   const handleCreateFlag = async () => {
     if (newFlagName.trim()) {
-      const newFlag = await createFlag(projectId, { name: newFlagName, isDefault: false });
+      const newFlag = await createFlag(projectId, { name: newFlagName, enabled: false });
       setFlags([...flags, newFlag]);
       setNewFlagName('');
     }
   };
 
-  const handleUpdateFlag = async (flagId: number, name: string, isDefault: boolean) => {
-    const updatedFlag = await updateFlag(projectId, flagId, { name, isDefault });
+  const handleUpdateFlag = async (flagId: number, name: string, enabled: boolean) => {
+    const updatedFlag = await updateFlag(projectId, flagId, { name, enabled });
     setFlags(flags.map(flag => flag.id === flagId ? updatedFlag : flag));
   };
 

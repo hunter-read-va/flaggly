@@ -15,7 +15,7 @@ const FlagItem: React.FC<FlagItemProps> = ({ flag, onUpdate, onDelete }) => {
   const [isEnabled, setIsEnabled] = useState(flag.enabled);
 
   const handleSave = () => {
-    onUpdate(flag.id, name, enabled);
+    onUpdate(flag.id, name, isEnabled);
     setIsEditing(false);
   };
 
@@ -31,8 +31,8 @@ const FlagItem: React.FC<FlagItemProps> = ({ flag, onUpdate, onDelete }) => {
           />
           <input
             type="checkbox"
-            checked={enabled}
-            onChange={(e) => setEnabled(e.target.checked)}
+            checked={isEnabled}
+            onChange={(e) => setIsEnabled(e.target.checked)}
             className="checkbox ml-2"
           />
           <button onClick={handleSave} className="btn btn-primary ml-2">Save</button>
@@ -40,7 +40,7 @@ const FlagItem: React.FC<FlagItemProps> = ({ flag, onUpdate, onDelete }) => {
         </div>
       ) : (
         <div>
-          <span>{flag.name} (Default: {flag.isDefault.toString()})</span>
+          <span>{flag.name} (Enabled: {flag.enabled.toString()})</span>
           <button onClick={() => setIsEditing(true)} className="btn btn-primary ml-2">Edit</button>
           <button onClick={() => onDelete(flag.id)} className="btn btn-secondary ml-2">Delete</button>
         </div>

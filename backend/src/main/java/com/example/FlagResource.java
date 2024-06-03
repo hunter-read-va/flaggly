@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Path("/flags")
 @Produces(MediaType.APPLICATION_JSON)
@@ -20,14 +21,14 @@ public class FlagResource {
     ProjectRepository projectRepository;
 
     @GET
-    public List<Flag> getAllFlags() {
-        return flagRepository.listAll();
+    public List<FlagResponse> getAllFlags() {
+        return flagRepository.listAll().stream().map(FlagResponse::new).collect(Collectors.toList());
     }
 
     @GET
     @Path("/{id}")
-    public Flag getFlag(@PathParam("id") Long id) {
-        return flagRepository.findById(id);
+    public FlagResponse getFlag(@PathParam("id") Long id) {
+        return new FlagResponse(flagRepository.findById(id));
     }
 
     @POST
@@ -42,13 +43,13 @@ public class FlagResource {
         flag.setEnabled(flagRequest.enabled);
         flag.setSecondaryKey(flagRequest.secondaryKey);
         flagRepository.persist(flag);
-        return Response.status(Response.Status.CREATED).entity(flag).build();
+        return Response.status(Response.Status.CREATED).entity(new FlagResponse(flag)).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
-    public Flag updateFlag(@PathParam("id") Long id, FlagRequest flagRequest) {
+    public FlagResponse updateFlag(@PathParam("id") Long id, FlagRequest flagRequest) {
         Flag existingFlag = flagRepository.findById(id);
         existingFlag.setName(flagRequest.name);
         existingFlag.setEnabled(flagRequest.enabled);
@@ -57,7 +58,7 @@ public class FlagResource {
             Project project = projectRepository.findById(flagRequest.projectId);
             existingFlag.setProject(project);
         }
-        return existingFlag;
+        return new FlagResponse(existingFlag);
     }
 
     @DELETE
@@ -82,6 +83,6 @@ public class FlagResource {
         if (flags.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(flags.get(0)).build();
+        return Response.ok(new FlagResponse(flags.get(0))).build();
     }
 }
