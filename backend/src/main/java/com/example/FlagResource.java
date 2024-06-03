@@ -85,4 +85,19 @@ public class FlagResource {
         }
         return Response.ok(new FlagResponse(flags.get(0))).build();
     }
+
+    /* 
+     * Add api endpoint to copy a flag from one project to another. Should take a flagId and an existing project Id. 
+     * Flag should remain in original Project, but also be copied to the new Project with the same values save for the 
+     * Project itself.
+     */ 
+    @PUT
+    @Path("/copy/{flagId}/{projectId}")
+    @Transactional
+    public Flag copyFlag(@PathParam("flagId") Long flagId, @PathParam("projectId") Long projectId) {
+        Flag flag = flagRepository.findById(flagId);
+        Project project = projectRepository.findById(projectId);
+        flag.setProject(project);
+        return flag;
+    }
 }
