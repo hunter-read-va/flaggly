@@ -28,7 +28,9 @@ public class ProjectResource {
 
     @POST
     @Transactional
-    public Response createProject(Project project) {
+    public Response createProject(ProjectRequest projectRequest) {
+        Project project = new Project();
+        project.setName(projectRequest.name);
         projectRepository.persist(project);
         return Response.status(Response.Status.CREATED).entity(project).build();
     }
@@ -36,9 +38,9 @@ public class ProjectResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Project updateProject(@PathParam("id") Long id, Project project) {
+    public Project updateProject(@PathParam("id") Long id, ProjectRequest projectRequest) {
         Project existingProject = projectRepository.findById(id);
-        existingProject.setName(project.getName());
+        existingProject.setName(projectRequest.name);
         return existingProject;
     }
 
@@ -48,5 +50,12 @@ public class ProjectResource {
     public Response deleteProject(@PathParam("id") Long id) {
         projectRepository.deleteById(id);
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Path("/{id}/flags")
+    public List<Flag> getFlagsByProject(@PathParam("id") Long id) {
+        Project project = projectRepository.findById(id);
+        return project.getFlags();
     }
 }
