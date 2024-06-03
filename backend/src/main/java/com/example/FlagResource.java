@@ -47,10 +47,7 @@ public class FlagResource {
         Flag existingFlag = flagRepository.findById(id);
         existingFlag.setName(flag.getName());
         existingFlag.setEnabled(flag.isEnabled());
-        if (flag.getProject() != null && flag.getProject().getId() != null) {
-            Project project = projectRepository.findById(flag.getProject().getId());
-            existingFlag.setProject(project);
-        }
+        existingFlag.setSecondaryKey(flag.getSecondaryKey());
         return existingFlag;
     }
 
@@ -60,5 +57,15 @@ public class FlagResource {
     public Response deleteFlag(@PathParam("id") Long id) {
         flagRepository.deleteById(id);
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Path("/project/{projectId}/flag")
+    public Response getFlagByName(@PathParam("projectId") Long projectId, @QueryParam("name") String name, @QueryParam("secondaryKey") String secondaryKey) {
+        List<Flag> flags = flagRepository.list("project.id = ?1 and name = ?2 and (secondaryKey = ?3 or ?3 is null)", projectId, name, secondaryKey);
+        if (flags.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(flags.get(0)).build();
     }
 }

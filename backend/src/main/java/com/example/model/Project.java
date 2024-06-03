@@ -12,7 +12,7 @@ public class Project {
     
     private String name;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Flag> flags;
 
     // Getters and Setters
