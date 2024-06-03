@@ -1,5 +1,5 @@
 # flaggly
-Project for evaluating new hires on code understanding, ability to review code, and architecting improvements.
+Project for evaluating candidates on code understanding, ability to review code, and architecting improvements.
 
 This is not representative of an enterprise application, and does not include testing, hard codes values, and is not scalable. **It is only meant for ease and speed of understanding the codebase.**
 
